@@ -28,6 +28,7 @@ add_action('rest_api_init', function () {
 function createDatabasePostRating()
 {
     global $table_prefix, $wpdb;
+    $table_prefix = 'wp_vpSCDZ_';//Вот такой костыль, я хз как по-другому сделать
 
     $tblname = 'postrating';
     $wp_track_table = $table_prefix . "$tblname ";
