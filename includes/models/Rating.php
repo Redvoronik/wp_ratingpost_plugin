@@ -7,13 +7,17 @@ class Rating
     private $negative = 0;
     private $comment = null;
 
-    public static $table = 'wp_postrating';
+    public static $table = 'postrating';
 
     function __construct(array $input = null) {
+        global $table_prefix;
+
         $this->post_id = ($input['post_id']) ?? null;
         $this->positive = ($input['positive']) ?? null;
         $this->negative = ($input['negative']) ?? null;
         $this->comment = ($input['comment']) ?? null;
+
+        $table = $table_prefix . 'wp_postrating';
     }
 
     public static function find(int $post_id)
@@ -62,10 +66,10 @@ class Rating
 
     public static function getAll($page = 1, $orderBy = 'id', $order = 'DESC')
     {
-        global $wpdb;
+        global $table_prefix, $wpdb;
         $limit = 50;
         $offset = $limit * ($page-1);
-        return $wpdb->get_results("SELECT " . self::$table . ".*, wp_posts.post_name as url, wp_posts.post_title as post_title FROM " . self::$table . " as " . self::$table . " INNER JOIN wp_posts ON post_id = wp_posts.id ORDER BY " . self::$table . "." . $orderBy . " " . $order . " LIMIT " . $limit . " OFFSET " . $offset);
+        return $wpdb->get_results("SELECT " . self::$table . ".*, {$table_prefix}posts.post_name as url, {$table_prefix}posts.post_title as post_title FROM " . self::$table . " as " . self::$table . " INNER JOIN {$table_prefix}posts ON post_id = {$table_prefix}posts.id ORDER BY " . self::$table . "." . $orderBy . " " . $order . " LIMIT " . $limit . " OFFSET " . $offset);
     }
 
     public function getValues()
